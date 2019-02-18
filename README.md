@@ -1,5 +1,5 @@
 
-# VCV Vision plugin (macOS only)
+# Vision (macOS only) - VCV Rack plugin
 
 ## AML Ambient Light Voltage (macOS only)
 
