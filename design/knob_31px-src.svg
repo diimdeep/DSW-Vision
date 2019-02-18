@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="29px" height="29px" viewBox="0 0 29 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>knob_31px-src</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="knob_31px-src" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1.000000, -1.000000)">
+        <g>
+            <g id="Group" transform="translate(0.500000, 0.500000)" fill-rule="nonzero">
+                <circle id="Oval" fill="#EFEFEF" cx="15" cy="15" r="14.3"></circle>
+                <circle id="Oval" fill="#010101" cx="15" cy="15" r="12.725"></circle>
+            </g>
+            <rect id="Rectangle-4" fill="#EFEFEF" x="15" y="2" width="1" height="11"></rect>
+        </g>
+    </g>
+</svg>
