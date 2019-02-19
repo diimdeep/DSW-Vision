@@ -10,13 +10,15 @@ SLUG = DSW
 VERSION = 0.6.0
 
 # FLAGS will be passed to both the C and C++ compiler
-FLAGS +=
+FLAGS += -I/usr/local/include/opencv4
 CFLAGS +=
 CXXFLAGS +=
 
+LIBS_opencv = -lopencv_core -lopencv_video
+
 # Careful about linking to shared libraries, since you can't assume much about the user's environment and library search path.
 # Static libraries are fine.
-LDFLAGS += -framework IOKit -framework CoreFoundation
+LDFLAGS += -framework IOKit -framework CoreFoundation $(LIBS_opencv)
 
 # Add .cpp and .c files to the build
 SOURCES += $(wildcard src/*.cpp)
