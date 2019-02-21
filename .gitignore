@@ -4,3 +4,13 @@
 /plugin.dll
 /plugin.so
 .DS_Store
+design/.ipynb_checkpoints
+design/flow_cpp_prototype/.ipynb_checkpoints
+design/flow_cpp_prototype/CMakeFiles
+design/flow_cpp_prototype/cmake-build-debug
+CMakeCache.txt
+design/flow_cpp_prototype/cmake_install.cmake
+design/flow_cpp_prototype/Makefile
+*.cbp
+cmake_install.cmake
+CMakeFiles

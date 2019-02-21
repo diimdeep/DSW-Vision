@@ -213,4 +213,4 @@ struct AmbientLightWidget : ModuleWidget {
 // author name for categorization per plugin, module slug (should never
 // change), human-readable module name, and any number of tags
 // (found in `include/tags.hpp`) separated by commas.
-Model *modelLightModule = Model::create<dsw_vision::AmbientLight, dsw_vision::AmbientLightWidget>("DSW", "Vision", "ALV Ambient Light Voltage", OSCILLATOR_TAG);
+Model *modelLightModule = Model::create<dsw_vision::AmbientLight, dsw_vision::AmbientLightWidget>("DSW-Vision", "ALV", "ALV Ambient Light Voltage", OSCILLATOR_TAG);
