@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="45px" height="380px" viewBox="0 0 45 380" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <!-- Generator: Sketch 53.1 (72631) - https://sketchapp.com -->
     <title>ALV-src</title>
     <desc>Created with Sketch.</desc>
     <defs>
@@ -9,11 +9,14 @@
             <stop stop-color="#000000" stop-opacity="0.431008732" offset="100%"></stop>
         </linearGradient>
     </defs>
-    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="AVL" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="ALV-src">
             <rect id="Rectangle-2" fill="#D9D9D9" x="0" y="0" width="45" height="380"></rect>
             <path d="M5,0 L25,0 C36.045695,-2.02906125e-15 45,8.954305 45,20 L45,373 C45,375.761424 42.7614237,378 40,378 L20,378 C8.954305,378 1.3527075e-15,369.045695 0,358 L0,5 C-3.38176876e-16,2.23857625 2.23857625,5.07265313e-16 5,0 Z" id="Rectangle" fill="#C1C1C1"></path>
             <path d="M6.5,1 L23.5,1 C34.545695,1 43.5,9.954305 43.5,21 L43.5,371 C43.5,373.761424 41.2614237,376 38.5,376 L21.5,376 C10.454305,376 1.5,367.045695 1.5,356 L1.5,6 C1.5,3.23857625 3.73857625,1 6.5,1 Z" id="Rectangle" fill="#010101"></path>
+            <text id="AVL" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
+                <tspan x="6.36363636" y="29">AVL</tspan>
+            </text>
             <path d="M10.5232738,1.0229817 L43.5915383,130.398136 L43.5915383,27.9807966 C43.5915383,27.9807966 43.5915383,21.5237865 43.5915383,20.2109217 C43.5915383,11.7822649 36.3902838,3.40381387 28.1444032,1.3708034 C25.3216407,0.674855227 10.5232738,1.0229817 10.5232738,1.0229817 Z" id="Screen-Shadow" fill="url(#linearGradient-1)" style="mix-blend-mode: lighten;"></path>
             <text id="OFFSET" font-family="InputSans-Regular, Input Sans" font-size="9" font-weight="normal" fill="#F0F0F0">
                 <tspan x="5" y="242">OFFSET</tspan>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="180px" height="381px" viewBox="0 0 180 381" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <!-- Generator: Sketch 53.1 (72631) - https://sketchapp.com -->
     <title>Flow-src</title>
     <desc>Created with Sketch.</desc>
     <defs>
@@ -9,89 +9,24 @@
             <stop stop-color="#000000" stop-opacity="0.431008732" offset="100%"></stop>
         </linearGradient>
     </defs>
-    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="Flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Flow-src">
             <rect id="Rectangle-2" fill="#D9D9D9" x="0" y="0.5" width="180" height="380"></rect>
             <path d="M5,0.5 L160,0.5 C171.045695,0.5 180,9.454305 180,20.5 L180,373.5 C180,376.261424 177.761424,378.5 175,378.5 L20,378.5 C8.954305,378.5 1.3527075e-15,369.545695 0,358.5 L0,5.5 C-3.38176876e-16,2.73857625 2.23857625,0.5 5,0.5 Z" id="Rectangle" fill="#C1C1C1"></path>
             <path d="M6.5,1.5 L157.5,1.5 C168.545695,1.5 177.5,10.454305 177.5,21.5 L177.5,371.5 C177.5,374.261424 175.261424,376.5 172.5,376.5 L21.5,376.5 C10.454305,376.5 1.5,367.545695 1.5,356.5 L1.5,6.5 C1.5,3.73857625 3.73857625,1.5 6.5,1.5 Z" id="Rectangle" fill="#010101"></path>
-            <path d="M26.3066883,1.43489143 L87.0682644,130.462224 L87.0682644,28.0448847 C87.0682644,28.0448847 87.0682644,21.5878745 87.0682644,20.2750097 C87.0682644,11.8463529 79.8670099,3.4679019 71.6211293,1.43489143 C68.7983669,0.738943255 26.3066883,1.43489143 26.3066883,1.43489143 Z" id="Screen-Shadow" fill="url(#linearGradient-1)" style="mix-blend-mode: lighten;"></path>
-            <text id="OFFSET" font-family="InputSans-Regular, Input Sans" font-size="9" font-weight="normal" fill="#F0F0F0">
-                <tspan x="49" y="307">OFFSET</tspan>
+            <text id="Flow" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
+                <tspan x="18.1363636" y="22">Flow</tspan>
             </text>
-            <g id="knobguide" transform="translate(2.000000, 254.000000)" fill="#EFEFEF">
-                <path d="M9,39 L13,39" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(11.000000, 39.500000) rotate(120.000000) translate(-11.000000, -39.500000) "></path>
-                <path d="M6,35 L9,35" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(7.500000, 35.500000) rotate(135.000000) translate(-7.500000, -35.500000) "></path>
-                <path d="M3,32 L6,32" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(4.500000, 32.500000) rotate(150.000000) translate(-4.500000, -32.500000) "></path>
-                <path d="M2,27 L5,27" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(3.500000, 27.500000) rotate(165.000000) translate(-3.500000, -27.500000) "></path>
-                <path d="M1,23 L4,23" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(2.500000, 23.500000) rotate(-180.000000) translate(-2.500000, -23.500000) "></path>
-                <path d="M1,18 L5,18" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(3.000000, 18.500000) rotate(-165.000000) translate(-3.000000, -18.500000) "></path>
-                <path d="M4,14 L7,14" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(5.500000, 14.500000) rotate(-150.000000) translate(-5.500000, -14.500000) "></path>
-                <path d="M7,10 L10,10" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(8.500000, 10.500000) rotate(-135.000000) translate(-8.500000, -10.500000) "></path>
-                <path d="M11,7 L14,7" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(12.500000, 7.500000) rotate(-120.000000) translate(-12.500000, -7.500000) "></path>
-                <path d="M15,6 L18,6" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(16.500000, 6.500000) rotate(-105.000000) translate(-16.500000, -6.500000) "></path>
-                <text id="0" font-family="Helvetica" font-size="8.125" font-weight="normal">
-                    <tspan x="18.7406311" y="8">0</tspan>
-                </text>
-                <path d="M24,6 L27,6" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(25.500000, 6.500000) rotate(-75.000000) translate(-25.500000, -6.500000) "></path>
-                <path d="M28,8 L31,8" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(29.500000, 8.500000) rotate(-60.000000) translate(-29.500000, -8.500000) "></path>
-                <path d="M32,11 L35,11" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(33.500000, 11.500000) rotate(-45.000000) translate(-33.500000, -11.500000) "></path>
-                <path d="M35,15 L38,15" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(36.500000, 15.500000) rotate(-30.000000) translate(-36.500000, -15.500000) "></path>
-                <path d="M36,19 L40,19" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(38.000000, 19.500000) rotate(-15.000000) translate(-38.000000, -19.500000) "></path>
-                <path d="M37,24 L40,24" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero"></path>
-                <path d="M36,28 L39,28" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(37.500000, 28.500000) rotate(15.000000) translate(-37.500000, -28.500000) "></path>
-                <path d="M34,32 L37,32" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(35.500000, 32.500000) rotate(30.000000) translate(-35.500000, -32.500000) "></path>
-                <path d="M31,36 L34,36" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(32.500000, 36.500000) rotate(45.000000) translate(-32.500000, -36.500000) "></path>
-                <path d="M27,39 L31,39" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(29.000000, 39.500000) rotate(60.000000) translate(-29.000000, -39.500000) "></path>
-                <text id="-" font-family="Helvetica" font-size="11.25" font-weight="normal">
-                    <tspan x="2" y="44">-</tspan>
-                </text>
-                <text id="+" font-family="Helvetica" font-size="8.75" font-weight="normal">
-                    <tspan x="34" y="43">+</tspan>
-                </text>
-            </g>
-            <g id="knobguide" transform="translate(46.000000, 254.000000)" fill="#EFEFEF">
-                <path d="M9,39 L13,39" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(11.000000, 39.500000) rotate(120.000000) translate(-11.000000, -39.500000) "></path>
-                <path d="M6,35 L9,35" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(7.500000, 35.500000) rotate(135.000000) translate(-7.500000, -35.500000) "></path>
-                <path d="M3,32 L6,32" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(4.500000, 32.500000) rotate(150.000000) translate(-4.500000, -32.500000) "></path>
-                <path d="M2,27 L5,27" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(3.500000, 27.500000) rotate(165.000000) translate(-3.500000, -27.500000) "></path>
-                <path d="M1,23 L4,23" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(2.500000, 23.500000) rotate(-180.000000) translate(-2.500000, -23.500000) "></path>
-                <path d="M1,18 L5,18" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(3.000000, 18.500000) rotate(-165.000000) translate(-3.000000, -18.500000) "></path>
-                <path d="M4,14 L7,14" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(5.500000, 14.500000) rotate(-150.000000) translate(-5.500000, -14.500000) "></path>
-                <path d="M7,10 L10,10" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(8.500000, 10.500000) rotate(-135.000000) translate(-8.500000, -10.500000) "></path>
-                <path d="M11,7 L14,7" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(12.500000, 7.500000) rotate(-120.000000) translate(-12.500000, -7.500000) "></path>
-                <path d="M15,6 L18,6" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(16.500000, 6.500000) rotate(-105.000000) translate(-16.500000, -6.500000) "></path>
-                <text id="0" font-family="Helvetica" font-size="8.125" font-weight="normal">
-                    <tspan x="18.7406311" y="8">0</tspan>
-                </text>
-                <path d="M24,6 L27,6" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(25.500000, 6.500000) rotate(-75.000000) translate(-25.500000, -6.500000) "></path>
-                <path d="M28,8 L31,8" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(29.500000, 8.500000) rotate(-60.000000) translate(-29.500000, -8.500000) "></path>
-                <path d="M32,11 L35,11" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(33.500000, 11.500000) rotate(-45.000000) translate(-33.500000, -11.500000) "></path>
-                <path d="M35,15 L38,15" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(36.500000, 15.500000) rotate(-30.000000) translate(-36.500000, -15.500000) "></path>
-                <path d="M36,19 L40,19" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(38.000000, 19.500000) rotate(-15.000000) translate(-38.000000, -19.500000) "></path>
-                <path d="M37,24 L40,24" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero"></path>
-                <path d="M36,28 L39,28" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(37.500000, 28.500000) rotate(15.000000) translate(-37.500000, -28.500000) "></path>
-                <path d="M34,32 L37,32" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(35.500000, 32.500000) rotate(30.000000) translate(-35.500000, -32.500000) "></path>
-                <path d="M31,36 L34,36" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(32.500000, 36.500000) rotate(45.000000) translate(-32.500000, -36.500000) "></path>
-                <path d="M27,39 L31,39" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(29.000000, 39.500000) rotate(60.000000) translate(-29.000000, -39.500000) "></path>
-                <text id="-" font-family="Helvetica" font-size="11.25" font-weight="normal">
-                    <tspan x="2" y="44">-</tspan>
-                </text>
-                <text id="+" font-family="Helvetica" font-size="8.75" font-weight="normal">
-                    <tspan x="34" y="43">+</tspan>
-                </text>
-            </g>
-            <text id="SCALE" font-family="InputSans-Regular, Input Sans" font-size="9" font-weight="normal" fill="#F0F0F0">
-                <tspan x="7.86363636" y="308">SCALE</tspan>
-            </text>
-            <path d="M58.9309341,322.951706 C58.9309341,321.327245 57.6076602,320 55.9931908,320 L33.4377433,320 C31.8231711,320 30.5,321.327245 30.5,322.951706 L30.5,345.649242 C30.5,347.273702 31.8231711,348.605025 33.4377433,348.605025 L55.9931908,348.605025 C57.6076602,348.605025 58.9309341,347.273702 58.9309341,345.649242 L58.9309341,322.951706 Z" id="path34043" fill="#C1C1C1" fill-rule="nonzero"></path>
-            <g id="Group-2" transform="translate(3.000000, 2.000000)">
+            <path d="M100.82452,1.3093103 L177.761576,193.476851 L177.761576,27.9193035 C177.761576,27.9193035 177.761576,21.4622934 177.761576,20.1494286 C177.761576,11.7207718 170.560322,3.34232077 162.314441,1.3093103 C159.491679,0.613362124 100.82452,1.3093103 100.82452,1.3093103 Z" id="Screen-Shadow" fill="url(#linearGradient-1)" style="mix-blend-mode: lighten;"></path>
+            <g id="screw_top" transform="translate(3.000000, 2.000000)">
                 <circle id="Oval-2" fill="#D8D8D8" cx="5.5" cy="5.5" r="5.5"></circle>
                 <path d="M6.76241986,7.1655333 C6.50140383,7.38592566 6.00666637,6.66802717 5.6762133,6.72114719 C5.34576038,6.77426738 5.07594559,7.61506756 4.76460035,7.48668193 C4.4532551,7.35829629 4.79493914,6.54713211 4.58612637,6.27164158 C4.3773136,5.99615104 3.55250966,6.16992662 3.50218048,5.82114863 C3.45185129,5.47237063 4.28827292,5.37910493 4.40991307,5.05049422 C4.53155306,4.7218835 3.9765641,4.05485906 4.23758013,3.8344667 C4.49859617,3.61407434 4.99333363,4.33197283 5.3237867,4.27885281 C5.65423962,4.22573262 5.92405441,3.38493244 6.23539965,3.51331807 C6.5467449,3.64170371 6.20506086,4.45286789 6.41387363,4.72835842 C6.6226864,5.00384896 7.44749031,4.83007338 7.49781952,5.17885137 C7.54814873,5.52762937 6.71172708,5.62089507 6.59008693,5.94950578 C6.46844694,6.2781165 7.0234359,6.94514094 6.76241986,7.1655333 Z" id="path7856" stroke="#000000" stroke-width="0.5" fill="#000000" fill-rule="nonzero" transform="translate(5.500000, 5.500000) rotate(-21.258598) translate(-5.500000, -5.500000) "></path>
             </g>
-            <g id="Group-2" transform="translate(75.000000, 364.000000)">
+            <g id="screw_bot" transform="translate(164.000000, 364.500000)">
                 <circle id="Oval-2" fill="#D8D8D8" cx="5.5" cy="5.5" r="5.5"></circle>
                 <path d="M6.76241986,7.1655333 C6.50140383,7.38592566 6.00666637,6.66802717 5.6762133,6.72114719 C5.34576038,6.77426738 5.07594559,7.61506756 4.76460035,7.48668193 C4.4532551,7.35829629 4.79493914,6.54713211 4.58612637,6.27164158 C4.3773136,5.99615104 3.55250966,6.16992662 3.50218048,5.82114863 C3.45185129,5.47237063 4.28827292,5.37910493 4.40991307,5.05049422 C4.53155306,4.7218835 3.9765641,4.05485906 4.23758013,3.8344667 C4.49859617,3.61407434 4.99333363,4.33197283 5.3237867,4.27885281 C5.65423962,4.22573262 5.92405441,3.38493244 6.23539965,3.51331807 C6.5467449,3.64170371 6.20506086,4.45286789 6.41387363,4.72835842 C6.6226864,5.00384896 7.44749031,4.83007338 7.49781952,5.17885137 C7.54814873,5.52762937 6.71172708,5.62089507 6.59008693,5.94950578 C6.46844694,6.2781165 7.0234359,6.94514094 6.76241986,7.1655333 Z" id="path7856" stroke="#000000" stroke-width="0.5" fill="#000000" fill-rule="nonzero" transform="translate(5.500000, 5.500000) rotate(-21.258598) translate(-5.500000, -5.500000) "></path>
             </g>
+            <rect id="Rectangle-6" fill="#D8D8D8" x="9" y="30" width="160" height="120"></rect>
         </g>
     </g>
 </svg>
