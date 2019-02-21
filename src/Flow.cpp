@@ -1,9 +1,5 @@
 #include "Vision.hpp"
 
-// #include "widget/FramebufferWidget.hpp"
-// #include <nanovg.h>
-// #include <blendish.h>
-
 #include "opencv2/core/ocl.hpp"
 #include "opencv2/core/utility.hpp"
 #include "opencv2/imgcodecs.hpp"
@@ -36,12 +32,14 @@ struct Directions {
 };
 
 struct RenderData {
-	int width;
-	int height;
-	vector<uchar> *image; // uchar *image;
-	Directions *directions;
+	int 			  width;
+	int 			  height;
+	vector<uchar> 	  *image; 	// uchar *image;
+	Directions 		  *directions;
 	std::atomic<bool> *dirty;
 	std::atomic<bool> *free;
+	std::atomic<bool> *read;
+	std::atomic<bool> *useCPUorOpenCL;
 };
 
 static Mat getVisibleFlow(InputArray flow)
@@ -166,18 +164,27 @@ void * cameraOpenCVWorker(RenderData data) {
     }
     capture.set(CAP_PROP_FRAME_WIDTH, 320);
 	capture.set(CAP_PROP_FRAME_HEIGHT, 240);
-	std::chrono::seconds sec(1);
-	this_thread::sleep_for(sec);
+	std::chrono::milliseconds ms(500);
+	this_thread::sleep_for(ms); // IDK BUT IT THROWS..
+
+	// std::cout << "Enabling OpenCL" << std::endl;
+	bool useCPUorOpenCL = data.useCPUorOpenCL->load();
+	std::cout << "Changing option to use CPU(0)/GPU(1) = " << useCPUorOpenCL << std::endl;
+	ocl::setUseOpenCL(useCPUorOpenCL);
 
 	// std::cout << "Creating algo..." << std::endl;
 	Ptr<DenseOpticalFlow> alg = FarnebackOpticalFlow::create();
-	// std::cout << "Enabling OpenCL" << std::endl;
-	bool useOpenCL = false;
-	ocl::setUseOpenCL(useOpenCL);
 
 	// std::cout << "Capturing.." << std::endl;
 	UMat prevFrame, frame, input_frame, flow;
 	for(;;) {
+		bool useCPUorOpenCL_ = data.useCPUorOpenCL->load();
+		if(useCPUorOpenCL != useCPUorOpenCL_){
+			useCPUorOpenCL = useCPUorOpenCL_;
+			std::cout << "Changing option to use CPU(0)/GPU(1) = " << useCPUorOpenCL << std::endl;
+			ocl::setUseOpenCL(useCPUorOpenCL);
+		}
+
 		if (!capture.read(input_frame) || input_frame.empty())
         {
             cout << "Finished reading: empty frame" << endl;
@@ -232,6 +239,7 @@ void * cameraOpenCVWorker(RenderData data) {
 				data.directions->right = directions.right;
 				data.free->store(true);
 				data.dirty->store(true);
+				data.read->store(true);
 				// std::cout << "Stored." << std::endl;
             }
         }
@@ -248,7 +256,6 @@ struct Flow : Module {
 		NUM_INPUTS
 	};
 	enum OutputIds {
-		LIGHT_OUTPUT,
 		UP_OUTPUT,
 		DOWN_OUTPUT,
 		LEFT_OUTPUT,
@@ -259,50 +266,57 @@ struct Flow : Module {
 		BLINK_LIGHT,
 		NUM_LIGHTS
 	};
-	std::atomic<bool> renderDataFree;
-	std::atomic<bool> dirty;
-	bool read;
+
 	Directions directions;
 	vector<uchar> image;
+	std::atomic<bool> renderDataFree;
+	std::atomic<bool> dirty;
+	std::atomic<bool> read;
+	std::atomic<bool> useCPUorOpenCL;
 
 	RenderData renderData;
 	thread opencvThread;
 
 	Flow() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+		image = vector<uchar>(W*H*4*sizeof(uchar));
 		renderDataFree.store(true);
 		dirty.store(false);
+		read.store(false);
+		useCPUorOpenCL.store(false); // USE CPU
+		renderData.directions = &directions;
+		renderData.image = &image;
 		renderData.free = &renderDataFree;
 		renderData.dirty = &dirty;
-		renderData.directions = &directions;
-		image = vector<uchar>(W*H*4*sizeof(uchar));
-		renderData.image = &image;
+		renderData.read = &read;
+		renderData.useCPUorOpenCL = &useCPUorOpenCL;
 
-		renderData.width = W;
-		renderData.height = H;
+		// renderData.width = W;
+		// renderData.height = H;
 
 		opencvThread = thread(cameraOpenCVWorker, std::ref(renderData));
 		opencvThread.detach();
 	}
 
-	void step() override;
+	void step() {
+		while(!renderDataFree){
+		}
+
+		if(read) {
+			read.store(false);
+			// cout << directions.up << " " << directions.down << " " << directions.left << " " << directions.right << endl;
+			outputs[UP_OUTPUT].value = directions.up;
+			outputs[DOWN_OUTPUT].value = directions.down;
+			outputs[LEFT_OUTPUT].value = directions.left;
+			outputs[RIGHT_OUTPUT].value = directions.right;
+		}
+	}
+
+	void onReset() override {
+		useCPUorOpenCL = false;
+	}
 };
 
-void Flow::step() {
-	// unibi = (params[UNIBI_PARAM].value > 0.0f);
-	outputs[LIGHT_OUTPUT].value = 1.0;
 
-	while(!renderDataFree){
-	}
-
-	if(dirty) {
-		// cout << directions.up << " " << directions.down << " " << directions.left << " " << directions.right << endl;
-		outputs[UP_OUTPUT].value = directions.up;
-		outputs[DOWN_OUTPUT].value = directions.down;
-		outputs[LEFT_OUTPUT].value = directions.left;
-		outputs[RIGHT_OUTPUT].value = directions.right;
-		dirty.store(false);
-	}
-}
 
 struct RenderWidget : OpaqueWidget {
 	Flow *module;
@@ -338,34 +352,17 @@ struct RenderWidget : OpaqueWidget {
 		}
 
 		if(module->renderDataFree && module->dirty) {
-			try
-			{
-				// std::cout << "Read bitmap.." << std::endl;
-				// uchar* data = module->renderData->image.get()->data();
-				//    CRASHING HERE
-				//    img = nvgCreateImageRGBA(vg, module->renderData.width,module->renderData.height, 1, data);
-				nvgUpdateImage(vg, img, module->image.data());
-				// nvgUpdateImage(vg, img, vect.data());
-				//    std::cout << "DidRead." << std::endl;
-			}
-			catch (const cv::Exception& e)
-			{
-			    const char* err_msg = e.what();
-			    std::cout << "exception caught: " << err_msg << std::endl;
-			}
+			module->dirty.store(false);
+			nvgUpdateImage(vg, img, module->image.data());
 		}
 
-		// std::cout << "Paint.." << std::endl;
 		nvgBeginPath(vg);
 		// nvgScale(vg, width/W, height/H);
-	 	NVGpaint imgPaint = nvgImagePattern(vg, 0, 0, 160,120, 0, img, 1.0f);
-	 	nvgRect(vg, 0, 0, 160, 120);
-	 	nvgFillPaint(vg, imgPaint);
-	 	nvgFill(vg);
+		NVGpaint imgPaint = nvgImagePattern(vg, 0, 0, 160,120, 0, img, 1.0f);
+		nvgRect(vg, 0, 0, 160, 120);
+		nvgFillPaint(vg, imgPaint);
+		nvgFill(vg);
 		nvgClosePath(vg);
-		// std::cout << "DidPaint." << std::endl;
-		// module->dirty.store(false);
-
 	}
 };
 
@@ -385,6 +382,41 @@ struct FlowWidget : ModuleWidget {
 		addOutput(Port::create<PJ301MPort>(rack::Vec(10.376, 320.801), Port::OUTPUT, module, Flow::RIGHT_OUTPUT));
 	}
 
+	void appendContextMenu(Menu *menu) override {
+		Flow *module = dynamic_cast<Flow*>(this->module);
+
+		struct CPUorOpenCLItem : MenuItem {
+			Flow *module;
+			bool useCPUorOpenCL;
+			void onAction(EventAction &e) override {
+				module->useCPUorOpenCL.store(useCPUorOpenCL);
+			}
+		};
+
+		struct ClockItem : MenuItem {
+			Flow *module;
+			Menu *createChildMenu() override {
+				Menu *menu = new Menu();
+				std::vector<bool> options = {false, true};
+				std::vector<std::string> optionNames = {"Use CPU", "Use GPU (OpenCL)"};
+				for (size_t i = 0; i < options.size(); i++) {
+					bool useCPUorOpenCL = module->useCPUorOpenCL;
+					CPUorOpenCLItem *item =
+						MenuItem::create<CPUorOpenCLItem>(optionNames[i],
+															CHECKMARK(useCPUorOpenCL == options[i]));
+					item->module = module;
+					item->useCPUorOpenCL = options[i];
+					menu->addChild(item);
+				}
+				return menu;
+			}
+		};
+
+		menu->addChild(construct<MenuLabel>());
+		ClockItem *item = MenuItem::create<ClockItem>("GPU / CPU");
+		item->module = module;
+		menu->addChild(item);
+	}
 };
 
 }

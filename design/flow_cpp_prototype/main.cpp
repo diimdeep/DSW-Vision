@@ -17,6 +17,11 @@
 using namespace std;
 using namespace cv;
 
+int w = 1280; //320 //1280
+int h = 720; //240 //720
+int ww = 320;//640; //160
+int hh = 240;//480; //120
+
 static Mat getVisibleFlow(InputArray flow)
 {
     vector<UMat> flow_vec;
@@ -148,8 +153,8 @@ int main(int argc, const char* argv[])
     }
 //    cap.set(CAP_PROP_FRAME_WIDTH,640);
 //    cap.set(CAP_PROP_FRAME_HEIGHT,480);
-    cap.set(CAP_PROP_FRAME_WIDTH, 320);
-    cap.set(CAP_PROP_FRAME_HEIGHT, 240);
+    cap.set(CAP_PROP_FRAME_WIDTH, w);
+    cap.set(CAP_PROP_FRAME_HEIGHT, h);
     std::this_thread::sleep_for(1s);
 
 //    Ptr<DenseOpticalFlow> alg;
@@ -180,7 +185,7 @@ int main(int argc, const char* argv[])
         }
 //        Size small_size = fitSize(input_frame.size(), Size(480, 320));
 //        Size small_size = fitSize(input_frame.size(), Size(320, 240));
-        Size small_size = fitSize(input_frame.size(), Size(160, 120));
+        Size small_size = fitSize(input_frame.size(), Size(ww, hh));
         if (!useOriginalSize && small_size != input_frame.size())
             resize(input_frame, frame, small_size);
         else
