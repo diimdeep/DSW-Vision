@@ -14,7 +14,7 @@
             <rect id="Rectangle-2" fill="#D9D9D9" x="0" y="0" width="180" height="380"></rect>
             <path d="M5,0 L160,0 C171.045695,-2.02906125e-15 180,8.954305 180,20 L180,375 C180,377.761424 177.761424,380 175,380 L20,380 C8.954305,380 1.3527075e-15,371.045695 0,360 L0,5 C-3.38176876e-16,2.23857625 2.23857625,5.07265313e-16 5,0 Z" id="Rectangle" fill="#C1C1C1"></path>
             <path d="M7,2 L158,2 C169.045695,2 178,10.954305 178,22 L178,372 C178,374.761424 175.761424,377 173,377 L22,377 C10.954305,377 2,368.045695 2,357 L2,7 C2,4.23857625 4.23857625,2 7,2 Z" id="Rectangle" fill="#010101"></path>
-            <rect id="Rectangle-6" fill="#111111" x="9" y="30" width="160" height="120"></rect>
+            <rect id="Rectangle-6" fill="#111111" opacity="0.300000012" x="9" y="30" width="160" height="120"></rect>
             <text id="Flow" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
                 <tspan x="18.1363636" y="22">Flow</tspan>
             </text>
@@ -86,8 +86,42 @@
                     <tspan x="34" y="43">+</tspan>
                 </text>
             </g>
+            <g id="knobguide-copy" transform="translate(8.000000, 154.000000)" fill="#EFEFEF">
+                <path d="M9,39 L13,39" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(11.000000, 39.500000) rotate(120.000000) translate(-11.000000, -39.500000) "></path>
+                <path d="M6,35 L9,35" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(7.500000, 35.500000) rotate(135.000000) translate(-7.500000, -35.500000) "></path>
+                <path d="M3,32 L6,32" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(4.500000, 32.500000) rotate(150.000000) translate(-4.500000, -32.500000) "></path>
+                <path d="M2,27 L5,27" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(3.500000, 27.500000) rotate(165.000000) translate(-3.500000, -27.500000) "></path>
+                <path d="M1,23 L4,23" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(2.500000, 23.500000) rotate(-180.000000) translate(-2.500000, -23.500000) "></path>
+                <path d="M1,18 L5,18" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(3.000000, 18.500000) rotate(-165.000000) translate(-3.000000, -18.500000) "></path>
+                <path d="M4,14 L7,14" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(5.500000, 14.500000) rotate(-150.000000) translate(-5.500000, -14.500000) "></path>
+                <path d="M7,10 L10,10" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(8.500000, 10.500000) rotate(-135.000000) translate(-8.500000, -10.500000) "></path>
+                <path d="M11,7 L14,7" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(12.500000, 7.500000) rotate(-120.000000) translate(-12.500000, -7.500000) "></path>
+                <path d="M15,6 L18,6" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(16.500000, 6.500000) rotate(-105.000000) translate(-16.500000, -6.500000) "></path>
+                <text id="0" font-family="Helvetica" font-size="8.125" font-weight="normal">
+                    <tspan x="18.7406311" y="8">0</tspan>
+                </text>
+                <path d="M24,6 L27,6" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(25.500000, 6.500000) rotate(-75.000000) translate(-25.500000, -6.500000) "></path>
+                <path d="M28,8 L31,8" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(29.500000, 8.500000) rotate(-60.000000) translate(-29.500000, -8.500000) "></path>
+                <path d="M32,11 L35,11" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(33.500000, 11.500000) rotate(-45.000000) translate(-33.500000, -11.500000) "></path>
+                <path d="M35,15 L38,15" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(36.500000, 15.500000) rotate(-30.000000) translate(-36.500000, -15.500000) "></path>
+                <path d="M36,19 L40,19" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(38.000000, 19.500000) rotate(-15.000000) translate(-38.000000, -19.500000) "></path>
+                <path d="M37,24 L40,24" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero"></path>
+                <path d="M36,28 L39,28" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(37.500000, 28.500000) rotate(15.000000) translate(-37.500000, -28.500000) "></path>
+                <path d="M34,32 L37,32" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(35.500000, 32.500000) rotate(30.000000) translate(-35.500000, -32.500000) "></path>
+                <path d="M31,36 L34,36" id="Shape" stroke="#F0F0F0" stroke-width="0.3" fill-rule="nonzero" transform="translate(32.500000, 36.500000) rotate(45.000000) translate(-32.500000, -36.500000) "></path>
+                <path d="M27,39 L31,39" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(29.000000, 39.500000) rotate(60.000000) translate(-29.000000, -39.500000) "></path>
+                <text id="-" font-family="Helvetica" font-size="11.25" font-weight="normal">
+                    <tspan x="2" y="44">-</tspan>
+                </text>
+                <text id="+" font-family="Helvetica" font-size="8.75" font-weight="normal">
+                    <tspan x="34" y="43">+</tspan>
+                </text>
+            </g>
             <text id="SCALE" transform="translate(163.000000, 178.000000) rotate(90.000000) translate(-163.000000, -178.000000) " font-family="InputSans-Regular, Input Sans" font-size="9" font-weight="normal" fill="#F0F0F0">
                 <tspan x="147.863636" y="182">SCALE</tspan>
+            </text>
+            <text id="SENS" transform="translate(55.000000, 177.500000) rotate(90.000000) translate(-55.000000, -177.500000) " font-family="InputSans-Regular, Input Sans" font-size="9" font-weight="normal" fill="#F0F0F0">
+                <tspan x="42.3181818" y="181.5">SENS</tspan>
             </text>
             <g id="knobguide" transform="translate(116.000000, 290.500000)" fill="#EFEFEF">
                 <path d="M9,39 L13,39" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(11.000000, 39.500000) rotate(120.000000) translate(-11.000000, -39.500000) "></path>

@@ -42,15 +42,16 @@ struct RenderData {
 	std::atomic<bool> *free;
 	std::atomic<bool> *read;
 	std::atomic<bool> *useCPUorOpenCL;
+	std::atomic<float> *sens;
 };
 
-static Mat getVisibleFlow(InputArray flow)
+static Mat getVisibleFlow(InputArray flow, float sens)
 {
     vector<UMat> flow_vec;
     split(flow, flow_vec);
     UMat magnitude, angle;
     cartToPolar(flow_vec[0], flow_vec[1], magnitude, angle, true);
-    magnitude.convertTo(magnitude, CV_32F, 0.5);
+    magnitude.convertTo(magnitude, CV_32F, 0.5*sens);
     vector<UMat> hsv_vec;
     hsv_vec.push_back(angle);
     hsv_vec.push_back(UMat::ones(angle.size(), angle.type()));
@@ -111,12 +112,12 @@ static Size fitSize(const Size & sz,  const Size & bounds)
 }
 
 
-static Directions flow_directions(InputArray flow) {
+static Directions flow_directions(InputArray flow, float sens) {
     vector<UMat> flow_vec;
     split(flow, flow_vec);
     UMat magnitude, angle;
     cartToPolar(flow_vec[0], flow_vec[1], magnitude, angle, true);
-    magnitude.convertTo(magnitude, CV_32F, 0.5);
+    magnitude.convertTo(magnitude, CV_32F, 0.5*sens);
 
     Mat filtered;
     threshold(magnitude, filtered, 0.4, 1, THRESH_BINARY);
@@ -184,6 +185,9 @@ void * cameraOpenCVWorker(RenderData data) {
 	// std::cout << "Capturing.." << std::endl;
 	UMat prevFrame, frame, input_frame, flow;
 	for(;;) {
+		while(data.read->load()){
+		}
+
 		bool useCPUorOpenCL_ = data.useCPUorOpenCL->load();
 		if(useCPUorOpenCL != useCPUorOpenCL_){
 			useCPUorOpenCL = useCPUorOpenCL_;
@@ -212,11 +216,12 @@ void * cameraOpenCVWorker(RenderData data) {
             t = getTickCount() - t;
             {
                 // std::cout << "Gen bitmap.." << std::endl;
-            	Mat img = getVisibleFlow(flow);
+                float sens = data.sens->load();
+            	Mat img = getVisibleFlow(flow, sens);
             	//CV_32FC3 isContinuous() 1
             	// cout << "getVisibleFlow format " << typeToString(img.type()) << " isContinuous() " << img.isContinuous() << endl;
 
-				Directions directions = flow_directions(flow);
+				Directions directions = flow_directions(flow, sens);
             	img = draw_directions_over_image(directions, img);
 
             	float fps = (getTickFrequency() / (double)t);
@@ -260,7 +265,8 @@ struct Flow : Module {
 	enum ParamIds {
 		DIRSCALE_PARAM,
 		XYSCALE_PARAM,
-		NUM_PARAMS
+		SENS_PARAM,
+		NUM_PARAMS,
 	};
 	enum InputIds {
 		NUM_INPUTS
@@ -286,6 +292,7 @@ struct Flow : Module {
 	std::atomic<bool> dirty;
 	std::atomic<bool> read;
 	std::atomic<bool> useCPUorOpenCL;
+	std::atomic<float> sens;
 
 	RenderData renderData;
 	thread opencvThread;
@@ -296,12 +303,14 @@ struct Flow : Module {
 		dirty.store(false);
 		read.store(false);
 		useCPUorOpenCL.store(false); // USE CPU
+		sens.store(0.4);
 		renderData.directions = &directions;
 		renderData.image = &image;
 		renderData.free = &renderDataFree;
 		renderData.dirty = &dirty;
 		renderData.read = &read;
 		renderData.useCPUorOpenCL = &useCPUorOpenCL;
+		renderData.sens = &sens;
 
 		// renderData.width = W;
 		// renderData.height = H;
@@ -315,11 +324,13 @@ struct Flow : Module {
 		}
 
 		if(read) {
-			read.store(false);
+			read.store(true);
 			// cout << directions.up << " " << directions.down << " " << directions.left << " " << directions.right << endl;
 
 			float xyscale = params[XYSCALE_PARAM].value;
 			float dirscale = params[DIRSCALE_PARAM].value;
+			float sens_ = params[SENS_PARAM].value;
+			sens.store(sens_);
 
 			float x = directions.right - directions.left;
 		    float y = directions.up - directions.down;
@@ -332,6 +343,8 @@ struct Flow : Module {
 			outputs[RIGHT_OUTPUT].value = directions.right * dirscale;
 			outputs[X_OUTPUT].value = x * xyscale;
 			outputs[Y_OUTPUT].value = y * xyscale;
+
+			read.store(false);
 		}
 	}
 
@@ -400,6 +413,7 @@ struct FlowWidget : ModuleWidget {
 
 		addParam(ParamWidget::create<Knob31>(rack::Vec(122, 162), module, Flow::DIRSCALE_PARAM, -1.0, 1.0, 1.0));
 		addParam(ParamWidget::create<Knob31>(rack::Vec(122, 299), module, Flow::XYSCALE_PARAM, -1.0, 1.0, 1.0));
+		addParam(ParamWidget::create<Knob31>(rack::Vec(14, 162), module, Flow::SENS_PARAM, 0.01, 1, 1.99));
 
 		addOutput(Port::create<PJ301MPort>(rack::Vec(94.5, 272), Port::OUTPUT, module, Flow::ANGLE_OUTPUT));
 		addOutput(Port::create<PJ301MPort>(rack::Vec(78, 178), Port::OUTPUT, module, Flow::UP_OUTPUT));
