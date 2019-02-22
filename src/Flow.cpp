@@ -14,6 +14,7 @@
 #include <thread>
 
 #include "colors.h"
+#include "controls.hpp"
 
 namespace dsw_vision {
 
@@ -29,6 +30,7 @@ struct Directions {
 	float up;
 	float left;
 	float down;
+	float angle;
 };
 
 struct RenderData {
@@ -59,22 +61,22 @@ static Mat getVisibleFlow(InputArray flow)
     cvtColor(hsv, img, COLOR_HSV2BGR);
     Mat img8;
     img.convertTo(img8, CV_8UC3, 255);
-    flip(img8, img8, 1);
+    // flip(img8, img8, 1);
     return img8;
 }
 
 
 static Mat draw_directions_over_image(Directions directions, Mat img){
     ostringstream buf;
-    buf << directions.up << " " << directions.down << " " << directions.left << " " << directions.right;
-    putText(img, buf.str(), Point(5, 20), FONT_HERSHEY_PLAIN, 0.7, Scalar(255, 255, 255), 2, LINE_AA);
+    buf << fixed << setprecision(1) << directions.up << " " << directions.down << " " << directions.left << " " << directions.right;
+    putText(img, buf.str(), Point(1, 10), FONT_HERSHEY_PLAIN, 0.9, Scalar(255, 255, 255), 2, LINE_AA);
     return img;
 }
 
 static Mat draw_fps_over_image(float fps, Mat img){
     ostringstream buf;
 	buf << "FPS: " << fixed << setprecision(1) << fps;
-	putText(img, buf.str(), Point(5, 35), FONT_HERSHEY_PLAIN, 0.7, Scalar(0, 0, 255), 2, LINE_AA);
+	putText(img, buf.str(), Point(1, 22), FONT_HERSHEY_PLAIN, 0.9, Scalar(0, 0, 255), 2, LINE_AA);
     return img;
 }
 
@@ -131,7 +133,7 @@ static Directions flow_directions(InputArray flow) {
     Directions d;
     UMat up;
     inRange(angleFiltered, 45, 135, up);
-    d.up = countNonZero(up)/scale;
+    d.down = countNonZero(up)/scale;
 
     UMat left;
     inRange(angleFiltered, 135, 225, left);
@@ -139,16 +141,20 @@ static Directions flow_directions(InputArray flow) {
 
     UMat down;
     inRange(angleFiltered, 225, 315, down);
-    d.down = countNonZero(down)/scale;
+    d.up = countNonZero(down)/scale;
 
 //    int rightMag = 0;
     UMat right1;
     inRange(angleFiltered, 0.1, 45, right1);
     d.right = countNonZero(right1);
     UMat right2;
-    inRange(angleFiltered, 315, 359.5, right2);
+    inRange(angleFiltered, 315, 359.9, right2);
     d.right = d.right + countNonZero(right2);
     d.right = d.right/scale;
+
+    double mean = cv::mean(angleFiltered)[0];
+    d.angle = mean;
+
 
     return d;
 }
@@ -194,6 +200,7 @@ void * cameraOpenCVWorker(RenderData data) {
         // std::cout << "Resize.." << std::endl;
         Size small_size = fitSize(input_frame.size(), Size(W, H));
         resize(input_frame, frame, small_size);
+        flip(frame, frame, 1);
 
 		cvtColor(frame, frame, COLOR_BGR2GRAY);
 
@@ -233,6 +240,7 @@ void * cameraOpenCVWorker(RenderData data) {
 				data.free->store(false);
 				memcpy(data.image->data(), frameData, arrayLength * sizeof(uchar));
 				// data.image->data = frameData;
+				data.directions->angle = directions.angle;
 				data.directions->up = directions.up;
 				data.directions->left = directions.left;
 				data.directions->down = directions.down;
@@ -250,16 +258,21 @@ void * cameraOpenCVWorker(RenderData data) {
 
 struct Flow : Module {
 	enum ParamIds {
+		DIRSCALE_PARAM,
+		XYSCALE_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
 		NUM_INPUTS
 	};
 	enum OutputIds {
+		ANGLE_OUTPUT,
 		UP_OUTPUT,
 		DOWN_OUTPUT,
 		LEFT_OUTPUT,
 		RIGHT_OUTPUT,
+		X_OUTPUT,
+		Y_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -304,10 +317,21 @@ struct Flow : Module {
 		if(read) {
 			read.store(false);
 			// cout << directions.up << " " << directions.down << " " << directions.left << " " << directions.right << endl;
-			outputs[UP_OUTPUT].value = directions.up;
-			outputs[DOWN_OUTPUT].value = directions.down;
-			outputs[LEFT_OUTPUT].value = directions.left;
-			outputs[RIGHT_OUTPUT].value = directions.right;
+
+			float xyscale = params[XYSCALE_PARAM].value;
+			float dirscale = params[DIRSCALE_PARAM].value;
+
+			float x = directions.right - directions.left;
+		    float y = directions.up - directions.down;
+		    // float anglee = fastAtan2(y/10, x/10);
+
+			outputs[ANGLE_OUTPUT].value = (directions.angle/360.0f)*10*xyscale;
+			outputs[UP_OUTPUT].value = directions.up * dirscale;
+			outputs[DOWN_OUTPUT].value = directions.down * dirscale;
+			outputs[LEFT_OUTPUT].value = directions.left * dirscale;
+			outputs[RIGHT_OUTPUT].value = directions.right * dirscale;
+			outputs[X_OUTPUT].value = x * xyscale;
+			outputs[Y_OUTPUT].value = y * xyscale;
 		}
 	}
 
@@ -315,8 +339,6 @@ struct Flow : Module {
 		useCPUorOpenCL = false;
 	}
 };
-
-
 
 struct RenderWidget : OpaqueWidget {
 	Flow *module;
@@ -376,10 +398,16 @@ struct FlowWidget : ModuleWidget {
 		display->box.size = rack::Vec(160, 120);
 		addChild(display);
 
-		addOutput(Port::create<PJ301MPort>(rack::Vec(10.376, 260.801), Port::OUTPUT, module, Flow::UP_OUTPUT));
-		addOutput(Port::create<PJ301MPort>(rack::Vec(10.376, 280.801), Port::OUTPUT, module, Flow::DOWN_OUTPUT));
-		addOutput(Port::create<PJ301MPort>(rack::Vec(10.376, 300.801), Port::OUTPUT, module, Flow::LEFT_OUTPUT));
-		addOutput(Port::create<PJ301MPort>(rack::Vec(10.376, 320.801), Port::OUTPUT, module, Flow::RIGHT_OUTPUT));
+		addParam(ParamWidget::create<Knob31>(rack::Vec(122, 162), module, Flow::DIRSCALE_PARAM, -1.0, 1.0, 1.0));
+		addParam(ParamWidget::create<Knob31>(rack::Vec(122, 299), module, Flow::XYSCALE_PARAM, -1.0, 1.0, 1.0));
+
+		addOutput(Port::create<PJ301MPort>(rack::Vec(94.5, 272), Port::OUTPUT, module, Flow::ANGLE_OUTPUT));
+		addOutput(Port::create<PJ301MPort>(rack::Vec(78, 178), Port::OUTPUT, module, Flow::UP_OUTPUT));
+		addOutput(Port::create<PJ301MPort>(rack::Vec(78, 226), Port::OUTPUT, module, Flow::DOWN_OUTPUT));
+		addOutput(Port::create<PJ301MPort>(rack::Vec(54, 202), Port::OUTPUT, module, Flow::LEFT_OUTPUT));
+		addOutput(Port::create<PJ301MPort>(rack::Vec(102, 202), Port::OUTPUT, module, Flow::RIGHT_OUTPUT));
+		addOutput(Port::create<PJ301MPort>(rack::Vec(88.5, 302), Port::OUTPUT, module, Flow::X_OUTPUT));
+		addOutput(Port::create<PJ301MPort>(rack::Vec(64.4, 278), Port::OUTPUT, module, Flow::Y_OUTPUT));
 	}
 
 	void appendContextMenu(Menu *menu) override {

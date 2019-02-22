@@ -1,43 +1,9 @@
 #include "Vision.hpp"
 #include "AmbientLightController.hpp"
 
+#include "controls.hpp"
+
 namespace dsw_vision {
-
-struct DSWKnob : RoundKnob {
-	DSWKnob(const char* svg, int dim) {
-		setSVG(SVG::load(assetPlugin(plugin, svg)));
-		box.size = Vec(dim, dim);
-		shadow->blurRadius = 2.0;
-		// k->shadow->opacity = 0.15;
-		shadow->box.pos = Vec(0.0, 3.0);
-	}
-};
-
-struct Knob31 : DSWKnob {
-	Knob31() : DSWKnob("res/knob_31px.svg", 29) { }
-};
-
-struct SliderSwitch : SVGSwitch, ToggleSwitch {
-	SliderSwitch() { }
-};
-
-struct SliderSwitch2State35x9 : SliderSwitch {
-	SliderSwitch2State35x9() {
-		addFrame(SVG::load(assetPlugin(plugin, "res/slider_switch_2_35x9_0.svg")));
-		addFrame(SVG::load(assetPlugin(plugin, "res/slider_switch_2_35x9_1.svg")));
-		sw->wrap();
-		box.size = sw->box.size;
-	}
-};
-
-struct Port24 : SVGPort {
-	Port24() {
-		setSVG(SVG::load(assetPlugin(plugin, "res/port.svg")));
-		box.size = Vec(24, 24);
-		shadow->blurRadius = 1.0;
-		shadow->box.pos = Vec(0.0, 1.5);
-	}
-};
 
 struct AmbientLight : Module {
 	enum ParamIds {
