@@ -43,8 +43,9 @@ import cv2 as cv
 from time import clock
 
 # local modules
-from tst_scene_render import TestSceneRender
-import common
+# from opencv_py_examples import video
+from opencv_py_examples.tst_scene_render import TestSceneRender
+import opencv_py_examples.common
 
 class VideoSynthBase(object):
     def __init__(self, size=None, noise=0.0, bg = None, **params):
