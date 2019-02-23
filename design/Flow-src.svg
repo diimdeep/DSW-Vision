@@ -11,49 +11,48 @@
     </defs>
     <g id="Flow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Flow-src">
-            <rect id="Rectangle-2" fill="#D9D9D9" x="0" y="0" width="180" height="380"></rect>
             <path d="M5,0 L160,0 C171.045695,-2.02906125e-15 180,8.954305 180,20 L180,375 C180,377.761424 177.761424,380 175,380 L20,380 C8.954305,380 1.3527075e-15,371.045695 0,360 L0,5 C-3.38176876e-16,2.23857625 2.23857625,5.07265313e-16 5,0 Z" id="Rectangle" fill="#C1C1C1"></path>
             <path d="M7,2 L158,2 C169.045695,2 178,10.954305 178,22 L178,372 C178,374.761424 175.761424,377 173,377 L22,377 C10.954305,377 2,368.045695 2,357 L2,7 C2,4.23857625 4.23857625,2 7,2 Z" id="Rectangle" fill="#010101"></path>
             <rect id="Rectangle-6" fill="#111111" opacity="0.300000012" x="9" y="30" width="160" height="120"></rect>
             <text id="Flow" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
                 <tspan x="18.1363636" y="22">Flow</tspan>
             </text>
-            <g id="screw_top" transform="translate(2.000000, 2.000000)">
+            <g id="screw_top" transform="translate(2.000000, 1.500000)">
                 <circle id="Oval-2" fill="#D8D8D8" cx="5.5" cy="5.5" r="5.5"></circle>
                 <path d="M6.76241986,7.1655333 C6.50140383,7.38592566 6.00666637,6.66802717 5.6762133,6.72114719 C5.34576038,6.77426738 5.07594559,7.61506756 4.76460035,7.48668193 C4.4532551,7.35829629 4.79493914,6.54713211 4.58612637,6.27164158 C4.3773136,5.99615104 3.55250966,6.16992662 3.50218048,5.82114863 C3.45185129,5.47237063 4.28827292,5.37910493 4.40991307,5.05049422 C4.53155306,4.7218835 3.9765641,4.05485906 4.23758013,3.8344667 C4.49859617,3.61407434 4.99333363,4.33197283 5.3237867,4.27885281 C5.65423962,4.22573262 5.92405441,3.38493244 6.23539965,3.51331807 C6.5467449,3.64170371 6.20506086,4.45286789 6.41387363,4.72835842 C6.6226864,5.00384896 7.44749031,4.83007338 7.49781952,5.17885137 C7.54814873,5.52762937 6.71172708,5.62089507 6.59008693,5.94950578 C6.46844694,6.2781165 7.0234359,6.94514094 6.76241986,7.1655333 Z" id="path7856" stroke="#000000" stroke-width="0.5" fill="#000000" fill-rule="nonzero" transform="translate(5.500000, 5.500000) rotate(-21.258598) translate(-5.500000, -5.500000) "></path>
             </g>
-            <g id="screw_bot" transform="translate(167.000000, 365.500000)">
+            <g id="screw_bot" transform="translate(167.000000, 366.500000)">
                 <circle id="Oval-2" fill="#D8D8D8" cx="5.5" cy="5.5" r="5.5"></circle>
                 <path d="M6.76241986,7.1655333 C6.50140383,7.38592566 6.00666637,6.66802717 5.6762133,6.72114719 C5.34576038,6.77426738 5.07594559,7.61506756 4.76460035,7.48668193 C4.4532551,7.35829629 4.79493914,6.54713211 4.58612637,6.27164158 C4.3773136,5.99615104 3.55250966,6.16992662 3.50218048,5.82114863 C3.45185129,5.47237063 4.28827292,5.37910493 4.40991307,5.05049422 C4.53155306,4.7218835 3.9765641,4.05485906 4.23758013,3.8344667 C4.49859617,3.61407434 4.99333363,4.33197283 5.3237867,4.27885281 C5.65423962,4.22573262 5.92405441,3.38493244 6.23539965,3.51331807 C6.5467449,3.64170371 6.20506086,4.45286789 6.41387363,4.72835842 C6.6226864,5.00384896 7.44749031,4.83007338 7.49781952,5.17885137 C7.54814873,5.52762937 6.71172708,5.62089507 6.59008693,5.94950578 C6.46844694,6.2781165 7.0234359,6.94514094 6.76241986,7.1655333 Z" id="path7856" stroke="#000000" stroke-width="0.5" fill="#000000" fill-rule="nonzero" transform="translate(5.500000, 5.500000) rotate(-21.258598) translate(-5.500000, -5.500000) "></path>
             </g>
-            <g id="marks" transform="translate(41.500000, 156.500000)">
-                <text id="N" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
-                    <tspan x="42.6818182" y="19">N</tspan>
+            <g id="marks" transform="translate(29.500000, 162.500000)">
+                <text id="up" font-family="InputSans-Regular, Input Sans" font-size="10" font-weight="normal" fill="#F0F0F0">
+                    <tspan x="54.1363636" y="11">up</tspan>
                 </text>
-                <text id="S" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
-                    <tspan x="43.1818182" y="107">S</tspan>
+                <text id="down" font-family="InputSans-Regular, Input Sans" font-size="10" font-weight="normal" fill="#F0F0F0">
+                    <tspan x="47.3636364" y="101">down</tspan>
                 </text>
-                <text id="E" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
-                    <tspan x="0.409090909" y="63.5">E</tspan>
+                <text id="left" font-family="InputSans-Regular, Input Sans" font-size="10" font-weight="normal" fill="#F0F0F0">
+                    <tspan x="0.681818182" y="57.5">left</tspan>
                 </text>
-                <text id="W" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
-                    <tspan x="86.9545455" y="64">W</tspan>
+                <text id="right" font-family="InputSans-Regular, Input Sans" font-size="10" font-weight="normal" fill="#F0F0F0">
+                    <tspan x="99" y="57.5">right</tspan>
                 </text>
-                <text id="X" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
-                    <tspan x="53.1818182" y="184.5">X</tspan>
+                <text id="X" font-family="InputSans-Regular, Input Sans" font-size="10" font-weight="normal" fill="#F0F0F0">
+                    <tspan x="67.3636364" y="178.5">X</tspan>
                 </text>
-                <text id="Angle" transform="translate(86.495689, 105.995689) rotate(-45.000000) translate(-86.495689, -105.995689) " font-family="InputSans-Regular, Input Sans" font-size="10" font-weight="normal" fill="#F0F0F0">
-                    <tspan x="70.5865981" y="109.995689">Angle</tspan>
+                <text id="angle" transform="translate(98.495689, 99.995689) rotate(-45.000000) translate(-98.495689, -99.995689) " font-family="InputSans-Regular, Input Sans" font-size="10" font-weight="normal" fill="#F0F0F0">
+                    <tspan x="82.5865981" y="103.995689">angle</tspan>
                 </text>
-                <text id="Y" font-family="InputSans-Regular, Input Sans" font-size="16" font-weight="normal" fill="#F0F0F0">
-                    <tspan x="10.4090909" y="139">Y</tspan>
+                <text id="Y" font-family="InputSans-Regular, Input Sans" font-size="10" font-weight="normal" fill="#F0F0F0">
+                    <tspan x="24.3181818" y="133">Y</tspan>
                 </text>
-                <path d="M35.5,157.5 L35,133.5" id="Line-2" stroke="#C1C1C1" stroke-linecap="round"></path>
-                <path d="M35.5,157.5 L59,157.5" id="Line-3" stroke="#C1C1C1" stroke-linecap="round"></path>
-                <path d="M95,157.5 L59.3245205,157.5" id="Line-7" stroke="#979797" stroke-linecap="square"></path>
-                <path d="M95,21 L48.5,33" id="Line-4" stroke="#979797" stroke-linecap="square"></path>
-                <path d="M48.5,33 L48.5,81.5" id="Line-5" stroke="#979797" stroke-linecap="square"></path>
-                <path d="M72.5,57.25 L24.5,57.25" id="Line-6" stroke="#979797" stroke-linecap="square"></path>
+                <path d="M47.5,151.5 L47,127.5" id="Line-2" stroke="#C1C1C1" stroke-linecap="round"></path>
+                <path d="M47.5,151.5 L71,151.5" id="Line-3" stroke="#C1C1C1" stroke-linecap="round"></path>
+                <path d="M107,151.5 L71.3245205,151.5" id="Line-7" stroke="#979797" stroke-linecap="square"></path>
+                <path d="M107,15 L60.5,27" id="Line-4" stroke="#979797" stroke-linecap="square"></path>
+                <path d="M60.5,27 L60.5,75.5" id="Line-5" stroke="#979797" stroke-linecap="square"></path>
+                <path d="M84.5,51.25 L36.5,51.25" id="Line-6" stroke="#979797" stroke-linecap="square"></path>
             </g>
             <g id="knobguide" transform="translate(116.000000, 154.000000)" fill="#EFEFEF">
                 <path d="M9,39 L13,39" id="Shape" stroke="#F0F0F0" stroke-width="1.5" fill-rule="nonzero" transform="translate(11.000000, 39.500000) rotate(120.000000) translate(-11.000000, -39.500000) "></path>
