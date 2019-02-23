@@ -43,6 +43,7 @@ struct RenderData {
 	std::atomic<bool> *read;
 	std::atomic<bool> *useCPUorOpenCL;
 	std::atomic<float> *sens;
+	std::atomic<int> *viewType;
 };
 
 static Mat getVisibleFlow(InputArray flow, float sens)
@@ -70,14 +71,21 @@ static Mat getVisibleFlow(InputArray flow, float sens)
 static Mat draw_directions_over_image(Directions directions, Mat img){
     ostringstream buf;
     buf << fixed << setprecision(1) << directions.up << " " << directions.down << " " << directions.left << " " << directions.right;
-    putText(img, buf.str(), Point(1, 10), FONT_HERSHEY_PLAIN, 0.9, Scalar(255, 255, 255), 2, LINE_AA);
+    putText(img, buf.str(), Point(1, 10), FONT_HERSHEY_PLAIN, 0.9, Scalar(255, 255, 255), 1, LINE_AA);
     return img;
 }
 
 static Mat draw_fps_over_image(float fps, Mat img){
     ostringstream buf;
-	buf << "FPS: " << fixed << setprecision(1) << fps;
-	putText(img, buf.str(), Point(1, 22), FONT_HERSHEY_PLAIN, 0.9, Scalar(0, 0, 255), 2, LINE_AA);
+	buf << "FPS: " << fixed << setprecision(0) << fps;
+	putText(img, buf.str(), Point(1, 12), FONT_HERSHEY_PLAIN, 0.7, Scalar(255, 255, 255), 1, LINE_AA);
+    return img;
+}
+
+static Mat draw_ms_over_image(float fps, Mat img){
+    ostringstream buf;
+	buf << "ms: " << fixed << setprecision(1) << fps;
+	putText(img, buf.str(), Point(60, 12), FONT_HERSHEY_PLAIN, 0.7, Scalar(255, 255, 255), 1, LINE_AA);
     return img;
 }
 
@@ -169,8 +177,11 @@ void * cameraOpenCVWorker(RenderData data) {
         std::cerr << "ERROR: Can't initialize camera capture" << std::endl;
         return 0;
     }
+    // capture.set(CAP_PROP_EXPOSURE, 0);
+  	// capture.set(CAP_PROP_FPS, 30);
     capture.set(CAP_PROP_FRAME_WIDTH, 320);
 	capture.set(CAP_PROP_FRAME_HEIGHT, 240);
+	capture.set(CAP_PROP_CONVERT_RGB, false);
 	std::chrono::milliseconds ms(500);
 	this_thread::sleep_for(ms); // IDK BUT IT THROWS..
 
@@ -183,10 +194,9 @@ void * cameraOpenCVWorker(RenderData data) {
 	Ptr<DenseOpticalFlow> alg = FarnebackOpticalFlow::create();
 
 	// std::cout << "Capturing.." << std::endl;
-	UMat prevFrame, frame, input_frame, flow;
+	UMat prevFrame, frame, frameGray, input_frame, flow;
 	for(;;) {
-		while(data.read->load()){
-		}
+		double startTime = getTickCount();
 
 		bool useCPUorOpenCL_ = data.useCPUorOpenCL->load();
 		if(useCPUorOpenCL != useCPUorOpenCL_){
@@ -206,57 +216,76 @@ void * cameraOpenCVWorker(RenderData data) {
         resize(input_frame, frame, small_size);
         flip(frame, frame, 1);
 
-		cvtColor(frame, frame, COLOR_BGR2GRAY);
+		cvtColor(frame, frameGray, COLOR_BGR2GRAY);
+
 
 		if (!prevFrame.empty())
         {
         	// std::cout << "Run algo.." << std::endl;
-            int64 t = getTickCount();
-            alg->calc(prevFrame, frame, flow);
-            t = getTickCount() - t;
-            {
-                // std::cout << "Gen bitmap.." << std::endl;
-                float sens = data.sens->load();
-            	Mat img = getVisibleFlow(flow, sens);
-            	//CV_32FC3 isContinuous() 1
-            	// cout << "getVisibleFlow format " << typeToString(img.type()) << " isContinuous() " << img.isContinuous() << endl;
 
-				Directions directions = flow_directions(flow, sens);
-            	img = draw_directions_over_image(directions, img);
+            alg->calc(prevFrame, frameGray, flow);
 
-            	float fps = (getTickFrequency() / (double)t);
-            	img = draw_fps_over_image(fps, img);
+            // std::cout << "Gen bitmap.." << std::endl;
 
-				// img = cv::imread(assetPlugin(plugin, "design/pic5160x120.png"), IMREAD_COLOR);//IMREAD_UNCHANGED);//
-				// CV_8UC3 isContinuous() 1
-				// cout << "Image format " << typeToString(img.type()) << " isContinuous() " << img.isContinuous() << endl;
-		        // cv::cvtColor(img, img, COLOR_BGR2BGRA, 4);
-		        int arrayLength = img.total()*4;
+            float sens = data.sens->load();
 
-				// vector<uchar> frameData_ptr = vector<uchar>(arrayLength);
-		        uchar* frameData = new uchar[arrayLength];
-		        Mat continuousRGBA(img.size(), CV_8UC4, frameData);
-		        // Mat continuousRGBA(img.size(), CV_8UC4, frameData.get()->data());
-		        // Mat continuousRGBA(img.size(), CV_8UC4);
-				// cv::cvtColor(img, continuousRGBA, COLOR_BGR2BGRA, 4);
-				cv::cvtColor(img, continuousRGBA, COLOR_BGR2RGBA, 4);
-
-				// std::cout << "Store bitmap.." << std::endl;
-				data.free->store(false);
-				memcpy(data.image->data(), frameData, arrayLength * sizeof(uchar));
-				// data.image->data = frameData;
-				data.directions->angle = directions.angle;
-				data.directions->up = directions.up;
-				data.directions->left = directions.left;
-				data.directions->down = directions.down;
-				data.directions->right = directions.right;
-				data.free->store(true);
-				data.dirty->store(true);
-				data.read->store(true);
-				// std::cout << "Stored." << std::endl;
+			Mat img;
+            int viewType = data.viewType->load();
+            if (viewType == 0) {
+        		img = getVisibleFlow(flow, sens);
+            } else if (viewType == 1) {
+            	cvtColor(frame, img, COLOR_RGB2RGBA);
             }
+
+        	//CV_32FC3 isContinuous() 1
+        	// cout << "getVisibleFlow format " << typeToString(img.type()) << " isContinuous() " << img.isContinuous() << endl;
+
+			Directions directions = flow_directions(flow, sens);
+        	// img = draw_directions_over_image(directions, img);
+
+			double endTime = getTickCount();
+			double frameTime = endTime - startTime;
+			double freq = getTickFrequency();
+			double ms = 1000.0*frameTime / freq;
+        	double fps = (freq / (double)frameTime);
+        	img = draw_fps_over_image(fps, img);
+        	img = draw_ms_over_image(ms, img);
+
+			// img = cv::imread(assetPlugin(plugin, "design/pic5160x120.png"), IMREAD_COLOR);//IMREAD_UNCHANGED);//
+			// CV_8UC3 isContinuous() 1
+			// cout << "Image format " << typeToString(img.type()) << " isContinuous() " << img.isContinuous() << endl;
+	        // cv::cvtColor(img, img, COLOR_BGR2BGRA, 4);
+	        int arrayLength = img.total()*4;
+
+			// vector<uchar> frameData_ptr = vector<uchar>(arrayLength);
+	        uchar* frameData = new uchar[arrayLength];
+	        Mat continuousRGBA(img.size(), CV_8UC4, frameData);
+	        // Mat continuousRGBA(img.size(), CV_8UC4, frameData.get()->data());
+	        // Mat continuousRGBA(img.size(), CV_8UC4);
+			// cv::cvtColor(img, continuousRGBA, COLOR_BGR2BGRA, 4);
+			cv::cvtColor(img, continuousRGBA, COLOR_BGR2RGBA, 4);
+
+			// std::cout << "Store bitmap.." << std::endl;
+			data.free->store(false);
+			memcpy(data.image->data(), frameData, arrayLength * sizeof(uchar));
+			// data.image->data = frameData;
+			data.directions->angle = directions.angle;
+			data.directions->up = directions.up;
+			data.directions->left = directions.left;
+			data.directions->down = directions.down;
+			data.directions->right = directions.right;
+			data.free->store(true);
+			data.dirty->store(true);
+			data.read->store(true);
+
+			// if (fps > 30) {
+			// 	this_thread::sleep_for(chrono::duration<double, std::micro>(ms/1000.0));
+			// }
         }
-        frame.copyTo(prevFrame);
+        frameGray.copyTo(prevFrame);
+
+        while(data.read->load()){
+		}
 	}
 	return 0;
 }
@@ -266,6 +295,7 @@ struct Flow : Module {
 		DIRSCALE_PARAM,
 		XYSCALE_PARAM,
 		SENS_PARAM,
+		VIEWTYPE_PARAM,
 		NUM_PARAMS,
 	};
 	enum InputIds {
@@ -293,6 +323,7 @@ struct Flow : Module {
 	std::atomic<bool> read;
 	std::atomic<bool> useCPUorOpenCL;
 	std::atomic<float> sens;
+	std::atomic<int> viewType;
 
 	RenderData renderData;
 	thread opencvThread;
@@ -304,6 +335,7 @@ struct Flow : Module {
 		read.store(false);
 		useCPUorOpenCL.store(false); // USE CPU
 		sens.store(0.4);
+		viewType.store(0);
 		renderData.directions = &directions;
 		renderData.image = &image;
 		renderData.free = &renderDataFree;
@@ -311,6 +343,7 @@ struct Flow : Module {
 		renderData.read = &read;
 		renderData.useCPUorOpenCL = &useCPUorOpenCL;
 		renderData.sens = &sens;
+		renderData.viewType = &viewType;
 
 		// renderData.width = W;
 		// renderData.height = H;
@@ -320,8 +353,8 @@ struct Flow : Module {
 	}
 
 	void step() {
-		while(!renderDataFree){
-		}
+		// while(!renderDataFree){
+		// }
 
 		if(read) {
 			read.store(true);
@@ -365,7 +398,7 @@ struct RenderWidget : OpaqueWidget {
 	RenderWidget(){
 		std::cout << "Gen image.." << std::endl;
 
-		Mat image_alpha = cv::imread(assetPlugin(plugin, "design/opencv-logo-white320x240.png"), IMREAD_UNCHANGED);//IMREAD_COLOR);//
+		Mat image_alpha = cv::imread(assetPlugin(plugin, "res/preload.png"), IMREAD_UNCHANGED);//IMREAD_COLOR);//
 		cout << "Preload Image format " << typeToString(image_alpha.type())  << "isContinuous()" << image_alpha.isContinuous() << endl;
 
 		// cv::cvtColor(image, image, COLOR_BGR2RGBA, 4);
@@ -379,6 +412,16 @@ struct RenderWidget : OpaqueWidget {
         Mat continuousRGBA(image_alpha.size(), CV_8UC4, vect.data());
 		cv::cvtColor(image_alpha, continuousRGBA, COLOR_BGR2RGBA, 4);
 		// cv::cvtColor(image, continuousRGBA, COLOR_BGR2RGBA, 4);
+	}
+
+	void onMouseDown(EventMouseDown &e) override {
+		Widget::onMouseDown(e);
+		if (!e.target)
+			e.target = this;
+		if(module->viewType)
+			module->viewType.store(0);
+		else
+			module->viewType.store(1);
 	}
 
 	void draw(NVGcontext *vg) override {
