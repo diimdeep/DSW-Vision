@@ -119,43 +119,6 @@ void AmbientLight::step() {
 	}
 }
 
-struct VCA_1VUKnob : Knob {
-	VCA_1VUKnob() {
-		box.size = Vec(16, 220);
-	}
-
-	void draw(NVGcontext *vg) override {
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2.0);
-		nvgFillColor(vg, nvgRGB(0, 0, 0));
-		nvgFill(vg);
-
-		AmbientLight *module = dynamic_cast<AmbientLight*>(this->module);
-
-		const int segs = 55;
-		const Vec margin = Vec(1, 1);
-		rack::Rect r = box.zeroPos().shrink(margin);
-
-		for (int i = 0; i < segs; i++) {
-			float segValue = clamp(value * segs - (segs - i - 1), 0.f, 1.f);
-			float amplitude = value * module->lux;
-			float segAmplitude = clamp(amplitude * segs - (segs - i - 1), 0.f, 1.f);
-			nvgBeginPath(vg);
-			nvgRect(vg, r.pos.x, r.pos.y + r.size.y / segs * i + 0.5,
-				r.size.x, r.size.y / segs - 1.0);
-			// if (segValue > 0.f) {
-			// 	nvgFillColor(vg, colorAlpha(nvgRGBf(0.33, 0.33, 0.33), segValue));
-			// 	nvgFill(vg);
-			// }
-			// if (segAmplitude > 0.f) {
-			{
-				nvgFillColor(vg, colorAlpha(COLOR_BLUE, segAmplitude));
-				nvgFill(vg);
-			}
-		}
-	}
-};
-
 struct AmbientLightWidget : ModuleWidget {
 	AmbientLightWidget(AmbientLight *module) : ModuleWidget(module) {
 		setPanel(SVG::load(assetPlugin(plugin, "res/ALV.svg")));

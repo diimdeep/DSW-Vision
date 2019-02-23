@@ -34,8 +34,6 @@ struct Directions {
 };
 
 struct RenderData {
-	int 			  width;
-	int 			  height;
 	vector<uchar> 	  *image; 	// uchar *image;
 	Directions 		  *directions;
 	std::atomic<bool> *dirty;
@@ -66,13 +64,12 @@ static Mat getVisibleFlow(InputArray flow, float sens)
     return img8;
 }
 
-
-static Mat draw_directions_over_image(Directions directions, Mat img){
-    ostringstream buf;
-    buf << fixed << setprecision(1) << directions.up << " " << directions.down << " " << directions.left << " " << directions.right;
-    putText(img, buf.str(), Point(1, 10), FONT_HERSHEY_PLAIN, 0.9, Scalar(255, 255, 255), 1, LINE_AA);
-    return img;
-}
+// static Mat draw_directions_over_image(Directions directions, Mat img){
+//     ostringstream buf;
+//     buf << fixed << setprecision(1) << directions.up << " " << directions.down << " " << directions.left << " " << directions.right;
+//     putText(img, buf.str(), Point(1, 10), FONT_HERSHEY_PLAIN, 0.9, Scalar(255, 255, 255), 1, LINE_AA);
+//     return img;
+// }
 
 static Mat draw_fps_over_image(float fps, Mat img){
     ostringstream buf;
@@ -195,12 +192,7 @@ void * cameraOpenCVWorker(RenderData data) {
             	cvtColor(frame, img, COLOR_BGR2RGBA);
             }
 
-        	//CV_32FC3 isContinuous() 1
-        	// cout << "getVisibleFlow format " << typeToString(img.type()) << " isContinuous() " << img.isContinuous() << endl;
-
 			Directions directions = flow_directions(flow, sens);
-        	// img = draw_directions_over_image(directions, img);
-
 			double endTime = getTickCount();
 			double frameTime = endTime - startTime;
 			double freq = getTickFrequency();
@@ -224,10 +216,6 @@ void * cameraOpenCVWorker(RenderData data) {
 			data.free->store(true);
 			data.dirty->store(true);
 			data.read->store(true);
-
-			// if (fps > 30) {
-			// 	this_thread::sleep_for(chrono::duration<double, std::micro>(ms/1000.0));
-			// }
         }
         frameGray.copyTo(prevFrame);
 
@@ -292,14 +280,11 @@ struct Flow : Module {
 		renderData.sens = &sens;
 		renderData.viewType = &viewType;
 
-		// renderData.width = W;
-		// renderData.height = H;
-
 		opencvThread = thread(cameraOpenCVWorker, std::ref(renderData));
 		opencvThread.detach();
 	}
 
-	void step() {
+	void step() override {
 		// while(!renderDataFree){
 		// }
 
@@ -338,8 +323,6 @@ struct RenderWidget : OpaqueWidget {
 	const float width = 160.0f;
 	const float height = 120.0f;
 	int img = 0;
-	uchar* preloadImage;
-	// std::shared_ptr<char> raiiArray;
 	vector<uchar> vect;
 
 	RenderWidget(){
@@ -373,7 +356,6 @@ struct RenderWidget : OpaqueWidget {
 		}
 
 		nvgBeginPath(vg);
-		// nvgScale(vg, width/W, height/H);
 		NVGpaint imgPaint = nvgImagePattern(vg, 0, 0, 160,120, 0, img, 1.0f);
 		nvgRect(vg, 0, 0, 160, 120);
 		nvgFillPaint(vg, imgPaint);
@@ -384,7 +366,7 @@ struct RenderWidget : OpaqueWidget {
 
 struct FlowWidget : ModuleWidget {
 	FlowWidget(Flow *module) : ModuleWidget(module) {
-		setPanel(SVG::load(assetPlugin(plugin, "res/Flow.svg")));
+		setPanelWithoutOutline(SVG::load(assetPlugin(plugin, "res/Flow.svg")));
 
 		RenderWidget *display = new RenderWidget();
 		display->module = module;
@@ -403,6 +385,22 @@ struct FlowWidget : ModuleWidget {
 		addOutput(Port::create<PJ301MPort>(rack::Vec(102, 202), Port::OUTPUT, module, Flow::RIGHT_OUTPUT));
 		addOutput(Port::create<PJ301MPort>(rack::Vec(88.5, 302), Port::OUTPUT, module, Flow::X_OUTPUT));
 		addOutput(Port::create<PJ301MPort>(rack::Vec(64.4, 278), Port::OUTPUT, module, Flow::Y_OUTPUT));
+	}
+
+	void setPanelWithoutOutline(std::shared_ptr<SVG> svg) {
+		// Remove old panel
+		if (panel) {
+			removeChild(panel);
+			delete panel;
+			panel = NULL;
+		}
+
+		SVGPanelWithoutOutline *mypanel = new SVGPanelWithoutOutline();
+		mypanel->setBackgroundWithoutOutline(svg);
+		panel = mypanel;
+		addChild(panel);
+
+		box.size = panel->box.size;
 	}
 
 	void appendContextMenu(Menu *menu) override {
