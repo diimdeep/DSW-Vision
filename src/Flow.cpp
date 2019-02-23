@@ -59,11 +59,10 @@ static Mat getVisibleFlow(InputArray flow, float sens)
     hsv_vec.push_back(magnitude);
     UMat hsv;
     merge(hsv_vec, hsv);
-    Mat img;
-    cvtColor(hsv, img, COLOR_HSV2BGR);
+    UMat img;
+    cvtColor(hsv, img, COLOR_HSV2RGB);
     Mat img8;
     img.convertTo(img8, CV_8UC3, 255);
-    // flip(img8, img8, 1);
     return img8;
 }
 
@@ -89,25 +88,6 @@ static Mat draw_ms_over_image(float fps, Mat img){
     return img;
 }
 
-// int width = 160;
-// int height = 120;
-// Mat img = draw_gradient(width, height);
-// imshow("Dense optical flow field", img);
-static Mat draw_gradient(int width, int height) {
-	Mat image(width, height, CV_8UC3);
-	for(int y = 0; y < height; y++){
-		Vec3b val;
-		val[0] = 0;
-		val[1] = (y*255)/height;
-		val[2] = (height-y)*255/height;
-		for(int x = 0; x < width; x++) {
-			image.at<Vec3b>(y,x) = val;
-		}
-	}
-	return image;
-}
-
-
 static Size fitSize(const Size & sz,  const Size & bounds)
 {
     CV_Assert(!sz.empty());
@@ -127,16 +107,13 @@ static Directions flow_directions(InputArray flow, float sens) {
     cartToPolar(flow_vec[0], flow_vec[1], magnitude, angle, true);
     magnitude.convertTo(magnitude, CV_32F, 0.5*sens);
 
-    Mat filtered;
+    UMat filtered;
     threshold(magnitude, filtered, 0.4, 1, THRESH_BINARY);
-    Mat filtered8u;
+    UMat filtered8u;
     filtered.convertTo(filtered8u, CV_8U);
 
     UMat angleFiltered;
     bitwise_and(angle, angle, angleFiltered, filtered8u);
-
-    UMat ufiltered;
-    filtered.copyTo(ufiltered);
 
     float scale = 1000.0f;
     Directions d;
@@ -152,7 +129,6 @@ static Directions flow_directions(InputArray flow, float sens) {
     inRange(angleFiltered, 225, 315, down);
     d.up = countNonZero(down)/scale;
 
-//    int rightMag = 0;
     UMat right1;
     inRange(angleFiltered, 0.1, 45, right1);
     d.right = countNonZero(right1);
@@ -160,10 +136,6 @@ static Directions flow_directions(InputArray flow, float sens) {
     inRange(angleFiltered, 315, 359.9, right2);
     d.right = d.right + countNonZero(right2);
     d.right = d.right/scale;
-
-    double mean = cv::mean(angleFiltered)[0];
-    d.angle = mean;
-
 
     return d;
 }
@@ -177,64 +149,50 @@ void * cameraOpenCVWorker(RenderData data) {
         std::cerr << "ERROR: Can't initialize camera capture" << std::endl;
         return 0;
     }
-    // capture.set(CAP_PROP_EXPOSURE, 0);
-  	// capture.set(CAP_PROP_FPS, 30);
+    capture.set(CAP_PROP_EXPOSURE, 0);
+  	capture.set(CAP_PROP_FPS, 30);
     capture.set(CAP_PROP_FRAME_WIDTH, 320);
 	capture.set(CAP_PROP_FRAME_HEIGHT, 240);
 	capture.set(CAP_PROP_CONVERT_RGB, false);
-	std::chrono::milliseconds ms(500);
-	this_thread::sleep_for(ms); // IDK BUT IT THROWS..
+	std::chrono::milliseconds ms(300);
+	this_thread::sleep_for(ms); // IT THROWS, looks like camera needs time to change size
 
-	// std::cout << "Enabling OpenCL" << std::endl;
 	bool useCPUorOpenCL = data.useCPUorOpenCL->load();
 	std::cout << "Changing option to use CPU(0)/GPU(1) = " << useCPUorOpenCL << std::endl;
 	ocl::setUseOpenCL(useCPUorOpenCL);
 
-	// std::cout << "Creating algo..." << std::endl;
 	Ptr<DenseOpticalFlow> alg = FarnebackOpticalFlow::create();
 
-	// std::cout << "Capturing.." << std::endl;
 	UMat prevFrame, frame, frameGray, input_frame, flow;
 	for(;;) {
 		double startTime = getTickCount();
 
 		bool useCPUorOpenCL_ = data.useCPUorOpenCL->load();
-		if(useCPUorOpenCL != useCPUorOpenCL_){
+		if(useCPUorOpenCL != useCPUorOpenCL_) {
 			useCPUorOpenCL = useCPUorOpenCL_;
 			std::cout << "Changing option to use CPU(0)/GPU(1) = " << useCPUorOpenCL << std::endl;
 			ocl::setUseOpenCL(useCPUorOpenCL);
 		}
 
-		if (!capture.read(input_frame) || input_frame.empty())
-        {
+		if (!capture.read(input_frame) || input_frame.empty()) {
             cout << "Finished reading: empty frame" << endl;
             break;
         }
-
-        // std::cout << "Resize.." << std::endl;
         Size small_size = fitSize(input_frame.size(), Size(W, H));
         resize(input_frame, frame, small_size);
         flip(frame, frame, 1);
-
-		cvtColor(frame, frameGray, COLOR_BGR2GRAY);
-
+		cvtColor(frame, frameGray, COLOR_RGB2GRAY);
 
 		if (!prevFrame.empty())
         {
-        	// std::cout << "Run algo.." << std::endl;
-
             alg->calc(prevFrame, frameGray, flow);
-
-            // std::cout << "Gen bitmap.." << std::endl;
-
             float sens = data.sens->load();
-
 			Mat img;
             int viewType = data.viewType->load();
             if (viewType == 0) {
         		img = getVisibleFlow(flow, sens);
             } else if (viewType == 1) {
-            	cvtColor(frame, img, COLOR_RGB2RGBA);
+            	cvtColor(frame, img, COLOR_BGR2RGBA);
             }
 
         	//CV_32FC3 isContinuous() 1
@@ -251,24 +209,13 @@ void * cameraOpenCVWorker(RenderData data) {
         	img = draw_fps_over_image(fps, img);
         	img = draw_ms_over_image(ms, img);
 
-			// img = cv::imread(assetPlugin(plugin, "design/pic5160x120.png"), IMREAD_COLOR);//IMREAD_UNCHANGED);//
-			// CV_8UC3 isContinuous() 1
-			// cout << "Image format " << typeToString(img.type()) << " isContinuous() " << img.isContinuous() << endl;
-	        // cv::cvtColor(img, img, COLOR_BGR2BGRA, 4);
 	        int arrayLength = img.total()*4;
-
-			// vector<uchar> frameData_ptr = vector<uchar>(arrayLength);
 	        uchar* frameData = new uchar[arrayLength];
 	        Mat continuousRGBA(img.size(), CV_8UC4, frameData);
-	        // Mat continuousRGBA(img.size(), CV_8UC4, frameData.get()->data());
-	        // Mat continuousRGBA(img.size(), CV_8UC4);
-			// cv::cvtColor(img, continuousRGBA, COLOR_BGR2BGRA, 4);
-			cv::cvtColor(img, continuousRGBA, COLOR_BGR2RGBA, 4);
-
-			// std::cout << "Store bitmap.." << std::endl;
+			cv::cvtColor(img, continuousRGBA, COLOR_RGB2RGBA, 4);
 			data.free->store(false);
 			memcpy(data.image->data(), frameData, arrayLength * sizeof(uchar));
-			// data.image->data = frameData;
+
 			data.directions->angle = directions.angle;
 			data.directions->up = directions.up;
 			data.directions->left = directions.left;
@@ -396,22 +343,13 @@ struct RenderWidget : OpaqueWidget {
 	vector<uchar> vect;
 
 	RenderWidget(){
-		std::cout << "Gen image.." << std::endl;
-
 		Mat image_alpha = cv::imread(assetPlugin(plugin, "res/preload.png"), IMREAD_UNCHANGED);//IMREAD_COLOR);//
 		cout << "Preload Image format " << typeToString(image_alpha.type())  << "isContinuous()" << image_alpha.isContinuous() << endl;
 
-		// cv::cvtColor(image, image, COLOR_BGR2RGBA, 4);
-		// int arrayLength = image.total()*4;
 		int arrayLength = image_alpha.total()*4;
-
 		vect = vector<uchar>(arrayLength);
-		// raiiArray = std::shared_ptr<char>(new char[arrayLength], std::default_delete<char[]>());
-		// preloadImage = new uchar[arrayLength];
-        // Mat continuousRGBA(image.size(), CV_8UC4, vect.data());
         Mat continuousRGBA(image_alpha.size(), CV_8UC4, vect.data());
-		cv::cvtColor(image_alpha, continuousRGBA, COLOR_BGR2RGBA, 4);
-		// cv::cvtColor(image, continuousRGBA, COLOR_BGR2RGBA, 4);
+		cv::cvtColor(image_alpha, continuousRGBA, COLOR_RGB2RGBA, 4);
 	}
 
 	void onMouseDown(EventMouseDown &e) override {
