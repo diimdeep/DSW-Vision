@@ -134,6 +134,9 @@ static Directions flow_directions(InputArray flow, float sens) {
     d.right = d.right + countNonZero(right2);
     d.right = d.right/scale;
 
+  	double mean = cv::mean(angleFiltered)[0];
+    d.angle = mean;
+
     return d;
 }
 
@@ -323,16 +326,16 @@ struct RenderWidget : OpaqueWidget {
 	const float width = 160.0f;
 	const float height = 120.0f;
 	int img = 0;
-	vector<uchar> vect;
+	// vector<uchar> vect;
 
 	RenderWidget(){
-		Mat image_alpha = cv::imread(assetPlugin(plugin, "res/preload.png"), IMREAD_UNCHANGED);//IMREAD_COLOR);//
-		cout << "Preload Image format " << typeToString(image_alpha.type())  << "isContinuous()" << image_alpha.isContinuous() << endl;
+		// Mat image_alpha = cv::imread(assetPlugin(plugin, "res/preload.png"), IMREAD_UNCHANGED);//IMREAD_COLOR);//
+		// cout << "Preload Image format " << typeToString(image_alpha.type())  << "isContinuous()" << image_alpha.isContinuous() << endl;
 
-		int arrayLength = image_alpha.total()*4;
-		vect = vector<uchar>(arrayLength);
-        Mat continuousRGBA(image_alpha.size(), CV_8UC4, vect.data());
-		cv::cvtColor(image_alpha, continuousRGBA, COLOR_RGB2RGBA, 4);
+		// int arrayLength = image_alpha.total()*4;
+		// vect = vector<uchar>(arrayLength);
+  //       Mat continuousRGBA(image_alpha.size(), CV_8UC4, vect.data());
+		// cv::cvtColor(image_alpha, continuousRGBA, COLOR_RGB2RGBA, 4);
 	}
 
 	void onMouseDown(EventMouseDown &e) override {
@@ -346,11 +349,10 @@ struct RenderWidget : OpaqueWidget {
 	}
 
 	void draw(NVGcontext *vg) override {
-		if(img == 0) {
-			img = nvgCreateImageRGBA(vg, 160, 120, 0, vect.data());
-		}
-
 		if(module->renderDataFree && module->dirty) {
+			if(img == 0) {
+				img = nvgCreateImageRGBA(vg, 160, 120, 0, module->image.data());
+			}
 			module->dirty.store(false);
 			nvgUpdateImage(vg, img, module->image.data());
 		}
