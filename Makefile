@@ -18,7 +18,7 @@ ifdef ARCH_LIN
 	FLAGS += -I/home/linuxbrew/.linuxbrew/include/opencv4
 	LIBS_opencv = -L/home/linuxbrew/.linuxbrew/lib -lopencv_imgproc -lopencv_core -lopencv_video
 	LDFLAGS += $(LIBS_opencv)
-	SOURCES += src/Flow.cpp src/Vision.cpp src/Vision.hpp
+	SOURCES += src/Flow.cpp src/Vision.cpp
 endif
 
 ifdef ARCH_MAC

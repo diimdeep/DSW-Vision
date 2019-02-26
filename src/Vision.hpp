@@ -6,5 +6,9 @@ using namespace rack;
 extern Plugin *plugin;
 
 // Forward-declare each Model, defined in each module source file
-extern Model *modelLightModule;
+
+#if ARCH_MAC	
+	extern Model *modelLightModule;
+#endif
+	
 extern Model *modelFlowModule;

@@ -8,7 +8,11 @@ void init(Plugin *p) {
 	p->version = TOSTRING(VERSION);
 
 	// Add all Models defined throughout the plugin
+	
+#if ARCH_MAC	
 	p->addModel(modelLightModule);
+#endif
+		
 	p->addModel(modelFlowModule);
 
 	// Any other plugin initialization may go here.
